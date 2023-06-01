@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<title>Fruit Shop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<head>
+    <style>
+        .swal2-confirm.btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .product-card {
+            display: inline-block;
+            width: 200px;
+            height: 300px;
+            margin: 10px;
+            text-align: center;
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            background-color: lightblue;
+            border-radius: 5px;
+        }
+        
+        .product-card h3 {
+            margin: 0;
+        }
+        
+        .btn {
+            font-family: sans-serif;
+            margin-top: 10px;
+            width: 100px;
+            height: 40px;
+        }
+        
+        #addedItems {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 100%;
+            overflow-y: auto;
+            background-color: #008080;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            margin-right: -40px;
+        }
+        
+        .added-item {
+            width: 100px;
+            height: 150px;
+            margin: 10px;
+            text-align: center;
+            margin-top: 50px;
+            margin-left: 30px;
+            font-family: sans-serif;
+            font-size: 20px;
+            align-content: center;
+            justify-items: center;
+        }
+        
+        .added-item img {
+            width: 100%;
+            height: 100px;
+            background-color: lightblue;
+            border-radius: 5px;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 200px;
+        }
+        
+        .btn-success {
+            margin-left: 60px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <img class="logo" src="images/logo2.jpg" alt="Bing logo">
+    </div>
+
+    <div id="products"></div>
+    <h2 style="margin-left: 30px;">Total Price: $<span id="totalPrice">0</span></h2>
+    <button id="buyButton" class="btn btn-success">Buy</button>
+    <div id="addedItems">
+        <h4 style="margin-left: 3px;" id="h4">Items selected</h4>
+    </div>
+
+</body>
+
+</html>
+<script>
+    let products = [{
+            photo: "images/product1.jpg",
+            price: 19.99
+        }, {
+            photo: "images/product2.jpg",
+            price: 10.99
+        }, {
+            photo: "images/product3.jpg",
+            price: 12.99
+        }, {
+            photo: "images/product4.jpg",
+            price: 16.99
+        }, {
+            photo: "images/product5.jpg",
+            price: 13.99
+        }, {
+            photo: "images/product6.jpg",
+            price: 20.99
+        }, {
+            photo: "images/product7.jpg",
+            price: 12.99
+        }, {
+            photo: "images/product8.jpg",
+            price: 19.99
+        }, {
+            photo: "images/product9.jpg",
+            price: 21.99
+        }, {
+            photo: "images/product10.jpg",
+            price: 25.99
+        }, {
+            photo: "images/product11.jpg",
+            price: 24.99
+        }, {
+            photo: "images/product12.jpg",
+            price: 19.99
+        }, {
+            photo: "images/product13.jpg",
+            price: 18.99
+        }, {
+            photo: "images/product14.jpg",
+            price: 15.99
+        }, {
+            photo: "images/product15.jpg",
+            price: 20.99
+        }, {
+            photo: "images/product16.jpg",
+            price: 27.99
+        }
+
+    ];
+
+    let productsContainer = document.getElementById("products");
+
+    for (let i = 0; i < products.length; i++) {
+        let product = products[i];
+        let productCard = document.createElement("div");
+        productCard.className = "product-card";
+        productCard.innerHTML = `
+                   <img src="${product.photo}">
+                   <h3>$${product.price}</h3>
+                   <button class="btn btn-primary">Add</button>
+               `;
+        productsContainer.appendChild(productCard);
+
+        let addButton = productCard.querySelector("button");
+        addButton.addEventListener("click", function() {
+            showAlert(product);
+        });
+    }
+
+    function showAlert(product) {
+
+        let addedItem = document.createElement("div");
+        addedItem.className = "added-item";
+        addedItem.innerHTML = `
+                   <img src="${product.photo}">
+                   <h3>$${product.price}</h3>
+                   <button class="btn btn-danger">Remove</button>
+               `;
+
+        document.getElementById("addedItems").appendChild(addedItem);
+
+
+        let removeButton = addedItem.querySelector("button");
+        removeButton.addEventListener("click", function() {
+
+            document.getElementById("addedItems").removeChild(addedItem);
+
+            updateTotalPrice();
+        });
+
+
+        updateTotalPrice();
+
+        Swal.fire({
+            title: 'Success!',
+            text: "You have added $" + product.price,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            }
+        })
+    }
+
+    function updateTotalPrice() {
+        let totalPrice = 0;
+        let addedItems = document.querySelectorAll("#addedItems .added-item");
+        for (let i = 0; i < addedItems.length; i++) {
+            let price = parseFloat(addedItems[i].querySelector("h3").textContent.replace("$", ""));
+            totalPrice += price;
+        }
+        document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
+    }
+
+    document.getElementById("buyButton").addEventListener("click", function() {
+        let totalPrice = document.getElementById("totalPrice").textContent;
+
+        if (totalPrice == 0) {
+            Swal.fire({
+                title: 'Warning',
+                text: 'You have not selected anything ',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            })
+        } else {
+            Swal.fire({
+                title: 'Purchase',
+                text: "Your total purchase is $" + totalPrice,
+                icon: 'info',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            })
+        }
+
+        // Reset total price and remove items
+
+        document.getElementById("totalPrice").textContent = "0";
+        document.getElementById("addedItems").innerHTML = "" + `<h4 style="margin-left: 3px;" id="h4">Items selected</h4>`;
+
+    });
+</script>
