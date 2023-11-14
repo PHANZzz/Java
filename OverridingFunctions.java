@@ -8,7 +8,7 @@ import java.util.List;
     }
     String num1="21";
     int num2=29;
-    Object obj=toInt(num1)+num2;
+    Object obj=toString(num1)+num2;
     print(obj);
   }
 }
@@ -22,14 +22,15 @@ class Overriding{
   println(Object object){
     System.out.println(object);
   }
-  public static int toInt(Object object){
-    return (int)object;
+  public static int toInt(String values){
+    return Integer.parseInt(values);
   }
   public static String
-  toString(Object object){
-    return object.toString();
+  toString(String values){
+    return String.valueOf(values);
   }
-  public static Double toDb(Object object){
-    return (double)object;
+  public static Double
+  toDouble(String values){
+    return Double.parseDouble(values) ;
   }
 } 
